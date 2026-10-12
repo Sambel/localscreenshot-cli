@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "localscreenshot"
+version = "0.1.0"
+description = "Take a screenshot of any public web page from the command line or from Python, from 227 countries. The client of the localscreenshot API."
+readme = "README.md"
+requires-python = ">= 3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "SOFTLOGIC", email = "hello@localscreenshot.com" }]
+keywords = ["screenshot", "screenshot-api", "website-screenshot", "web-capture", "url-to-image", "cli", "ai-agents", "mcp"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Multimedia :: Graphics :: Capture :: Screen Capture",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://localscreenshot.com"
+Repository = "https://github.com/Sambel/localscreenshot-cli"
+Documentation = "https://docs.localscreenshot.com"
+Issues = "https://github.com/Sambel/localscreenshot-cli/issues"
+
+[project.scripts]
+localscreenshot = "localscreenshot.cli:run"
+
+[tool.setuptools.packages.find]
+where = ["src"]

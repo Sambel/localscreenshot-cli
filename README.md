@@ -1,28 +1,58 @@
 # localscreenshot CLI
 
-Command line client for [localscreenshot](https://localscreenshot.com), the screenshot API:
-capture any public web page, optionally loaded from a chosen country, with cookie banners
-and ads hidden.
+Take a screenshot of any public web page from your terminal, from Node or from Python. This is the command line client of the [localscreenshot](https://localscreenshot.com) API.
 
-This repository is the source of record for the command line client. It holds the code for
-the two packages published from it, `localscreenshot` on npm and `localscreenshot` on PyPI.
-The service itself lives at https://localscreenshot.com and its code is not part of this
-repository.
+```bash
+npx localscreenshot https://example.com
+```
 
-## Status
+```bash
+pipx run localscreenshot https://example.com
+```
 
-The client is in development and has not been released yet. Installation instructions
-(`npx localscreenshot`, `pip install localscreenshot`) will be added here at the first
-release. Nothing in this repository is published until a release workflow runs and is
-approved.
+Both packages offer the same command, with the same options. Neither has a dependency.
 
-## How releases work
+| Package | Folder | Install |
+| --- | --- | --- |
+| [`localscreenshot` on npm](https://www.npmjs.com/package/localscreenshot) | [`npm/`](npm/) | `npm install -g localscreenshot` (Node 18 or later) |
+| [`localscreenshot` on PyPI](https://pypi.org/project/localscreenshot/) | [`python/`](python/) | `pip install localscreenshot` (Python 3.9 or later) |
 
-Publishing is done by GitHub Actions using trusted publishing, so no long lived registry
-token exists. A tag matching `v*` triggers both workflows. Each one is attached to the
-`release` environment, which requires a manual approval before it can reach the registry.
-Each release carries npm provenance.
+## Quick start
 
-## License
+1. Create a free account at [localscreenshot.com/signup](https://localscreenshot.com/signup). A new account gets free credits, no card needed.
+2. Save your API key once: `localscreenshot login`, or set `LOCALSCREENSHOT_API_KEY`.
+3. Take a screenshot:
 
-MIT, see [LICENSE](LICENSE).
+```bash
+localscreenshot https://example.com --full-page
+localscreenshot https://www.netflix.com --country BR
+localscreenshot https://example.com --device iphone_15 --dark --no-cookie-banners
+localscreenshot https://www.notion.com --click-text "Product"
+```
+
+The options are described in the README of each package. The Python package also exposes a function: `from localscreenshot import screenshot`.
+
+## What the client does with your key
+
+- It reads the key from `LOCALSCREENSHOT_API_KEY`, or from a file that `localscreenshot login` writes for your user only.
+- It sends the key to the API host only (`api.localscreenshot.com`, or the address you set yourself in `LOCALSCREENSHOT_API_URL`), over HTTPS. Redirects are not followed.
+- It never prints the key and never accepts it as a command line argument.
+- It sends no telemetry and does not check for updates.
+
+## Development
+
+```bash
+cd npm && npm test                                # Node's built-in test runner, no network
+cd python && python -m unittest discover -s tests # standard library only, no network
+```
+
+The tests run against a fake API started on your machine.
+
+## Links
+
+- [Documentation](https://docs.localscreenshot.com)
+- [API](https://localscreenshot.com/api)
+- [MCP server for AI tools](https://localscreenshot.com/mcp)
+- [Pricing](https://localscreenshot.com/pricing)
+
+MIT license.

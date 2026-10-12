@@ -1,0 +1,46 @@
+{
+  "name": "localscreenshot",
+  "version": "0.1.0",
+  "description": "Take a screenshot of any public web page from the command line, from 227 countries. The CLI of the localscreenshot API.",
+  "keywords": [
+    "screenshot",
+    "screenshot-api",
+    "website-screenshot",
+    "full-page-screenshot",
+    "web-capture",
+    "url-to-image",
+    "cli",
+    "ai-agents",
+    "mcp"
+  ],
+  "homepage": "https://localscreenshot.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sambel/localscreenshot-cli.git",
+    "directory": "npm"
+  },
+  "bugs": {
+    "url": "https://github.com/Sambel/localscreenshot-cli/issues"
+  },
+  "license": "MIT",
+  "author": "SOFTLOGIC <hello@localscreenshot.com> (https://localscreenshot.com)",
+  "bin": {
+    "localscreenshot": "bin/localscreenshot.js"
+  },
+  "main": "lib/cli.js",
+  "files": [
+    "bin",
+    "lib",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18.17"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "node --test test/"
+  }
+}
