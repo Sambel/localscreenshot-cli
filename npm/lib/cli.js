@@ -237,13 +237,29 @@ function defaultName(pageUrl, mime, now) {
     return `${host.slice(0, 80)}-${stamp}.${EXTENSIONS[mime]}`;
 }
 
+const EXISTS = 'The output file already exists. Use --force to overwrite it, or -o to choose another name.';
+
+// Checked before the screenshot is asked for: a file that is in the way must not cost a credit.
+function refuseExisting(file, force) {
+    const target = path.resolve(file);
+    // lstat, not exists: a dangling symbolic link counts as "already there".
+    const there = fs.lstatSync(target, { throwIfNoEntry: false });
+    if (there && there.isDirectory()) {
+        throw new UsageError('The output path is a folder. Give a file name with -o.');
+    }
+    if (!force && there) {
+        throw new UsageError(EXISTS);
+    }
+    const parent = fs.statSync(path.dirname(target), { throwIfNoEntry: false });
+    if (!parent || !parent.isDirectory()) {
+        throw new UsageError('The folder of the output file does not exist.');
+    }
+}
+
 function writeImage(file, bytes, force) {
     const target = path.resolve(file);
-    const refusal = 'The output file already exists. Use --force to overwrite it, or -o to choose another name.';
-    // lstat, not exists: a dangling symbolic link counts as "already there".
-    if (!force && fs.lstatSync(target, { throwIfNoEntry: false })) {
-        throw new UsageError(refusal);
-    }
+    const refusal = EXISTS;
+    refuseExisting(target, force);
     const temp = `${target}.${crypto.randomBytes(6).toString('hex')}.tmp`;
     try {
         fs.writeFileSync(temp, bytes, { flag: 'wx' });
@@ -319,6 +335,9 @@ async function takeScreenshot(io, url, values) {
     const base = apiBase(io.env);
     const body = requestBody(url, values);
     const key = readKey(io.env);
+    if (values.output) {
+        refuseExisting(values.output, Boolean(values.force));
+    }
     // One deadline for the whole operation (request, wait, download), on a clock that never goes backwards.
     const started = performance.now();
     const left = () => (io.totalMs ?? TOTAL_MS) - (performance.now() - started);

@@ -84,13 +84,26 @@ def default_name(page_url: str, mime: str, now: datetime) -> str:
     return f"{host[:80]}-{now.strftime('%Y%m%d-%H%M%S')}.{client.EXTENSIONS[mime]}"
 
 
-def write_image(file: str, data: bytes, force: bool) -> Path:
+EXISTS = "The output file already exists. Use --force to overwrite it, or -o to choose another name."
+
+
+def refuse_existing(file: str, force: bool) -> None:
+    """Checked before the screenshot is asked for: a file that is in the way must not cost a credit."""
     # abspath, not resolve, and lexists, not exists: a symbolic link is never followed, and a dangling one counts
     # as "already there".
-    target = Path(os.path.abspath(file))
-    refusal = "The output file already exists. Use --force to overwrite it, or -o to choose another name."
+    target = os.path.abspath(file)
+    if os.path.isdir(target) and not os.path.islink(target):
+        raise UsageError("The output path is a folder. Give a file name with -o.")
     if not force and os.path.lexists(target):
-        raise UsageError(refusal)
+        raise UsageError(EXISTS)
+    if not os.path.isdir(os.path.dirname(target)):
+        raise UsageError("The folder of the output file does not exist.")
+
+
+def write_image(file: str, data: bytes, force: bool) -> Path:
+    target = Path(os.path.abspath(file))
+    refusal = EXISTS
+    refuse_existing(file, force)
     if force:
         temp = target.with_name(f"{target.name}.{uuid.uuid4().hex[:12]}.tmp")
         try:
@@ -133,6 +146,8 @@ def _read_secret() -> str:
 
 def _take(args, out: Callable[[str], None], now: Callable[[], datetime], poll_every: float) -> None:
     url = args.target[0]
+    if args.output:
+        refuse_existing(args.output, args.force)
     shot = client.screenshot(
         url, country=args.country, full_page=args.full_page, device=args.device, format=args.format,
         click_text=args.click_text, block_cookie_banners=args.block_cookie_banners, block_ads=args.block_ads,

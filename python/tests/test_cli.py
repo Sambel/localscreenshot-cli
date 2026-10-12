@@ -135,6 +135,14 @@ class CliTest(unittest.TestCase):
         self.assertEqual(code, 2)
         self.assertIn("already exists", err)
         self.assertEqual(file.read_text(), "mine")
+        # Refused before anything is asked of the API: no screenshot taken, no credit used.
+        self.assertEqual(api.seen, [])
+        # The same for a path that cannot be written at all: a folder, or a folder that does not exist.
+        code, _, err, _ = self.run_cli(["https://example.com", "-o", str(self.dir), "--force"], api)
+        self.assertEqual((code, "is a folder" in err), (2, True))
+        code, _, err, _ = self.run_cli(["https://example.com", "-o", str(Path(self.dir, "nowhere", "home.png"))], api)
+        self.assertEqual((code, "does not exist" in err), (2, True))
+        self.assertEqual(api.seen, [])
         # A dangling symbolic link is "already there" too: nothing is written through it.
         if sys.platform != "win32":
             link = Path(self.dir, "link.png")

@@ -17,7 +17,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Optional
 
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 DEFAULT_API = "https://api.localscreenshot.com/v1"
 KEY_VARIABLE = "LOCALSCREENSHOT_API_KEY"
 USER_AGENT = f"localscreenshot-cli/{VERSION} (python)"

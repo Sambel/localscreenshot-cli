@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "localscreenshot"
-version = "0.1.0"
-description = "Take a screenshot of any public web page from the command line or from Python, from 227 countries. The client of the localscreenshot API."
+version = "0.1.1"
+description = "Screenshot API client and CLI. Take a screenshot of any public web page from the command line or from Python, from 227 countries."
 readme = "README.md"
 requires-python = ">= 3.9"
 license = "MIT"
 license-files = ["LICENSE"]
-authors = [{ name = "SOFTLOGIC", email = "hello@localscreenshot.com" }]
+authors = [{ name = "SOFTLOGIC" }, { email = "hello@localscreenshot.com" }]
 keywords = ["screenshot", "screenshot-api", "website-screenshot", "web-capture", "url-to-image", "cli", "ai-agents", "mcp"]
 classifiers = [
     "Development Status :: 4 - Beta",

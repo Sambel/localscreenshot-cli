@@ -1,7 +1,7 @@
 {
   "name": "localscreenshot",
-  "version": "0.1.0",
-  "description": "Take a screenshot of any public web page from the command line, from 227 countries. The CLI of the localscreenshot API.",
+  "version": "0.1.1",
+  "description": "Screenshot API client and CLI. Take a screenshot of any public web page from the command line, from 227 countries.",
   "keywords": [
     "screenshot",
     "screenshot-api",

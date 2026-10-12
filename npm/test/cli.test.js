@@ -122,6 +122,16 @@ test('an existing file is never overwritten without --force', async () => {
     assert.equal(kept.code, 2);
     assert.match(kept.err, /already exists/);
     assert.equal(fs.readFileSync(file, 'utf8'), 'mine');
+    // Refused before anything is asked of the API: no screenshot taken, no credit used.
+    assert.equal(api.seen.length, 0);
+    // The same for a path that cannot be written at all: a folder, or a folder that does not exist.
+    const folder = await run(['https://example.com', '-o', dir, '--force'], api);
+    assert.equal(folder.code, 2);
+    assert.match(folder.err, /is a folder/);
+    const missing = await run(['https://example.com', '-o', path.join(dir, 'nowhere', 'home.png')], api);
+    assert.equal(missing.code, 2);
+    assert.match(missing.err, /does not exist/);
+    assert.equal(api.seen.length, 0);
     // A dangling symbolic link is "already there" too: nothing is written through it.
     if (process.platform !== 'win32') {
         const link = path.join(dir, 'link.png');
